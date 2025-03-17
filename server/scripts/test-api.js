@@ -1,0 +1,73 @@
+const axios = require('axios');
+
+const BASE_URL = 'http://localhost:3000';
+
+(async () => {
+  try {
+    // Admin Login
+    console.log('Logging in as admin...');
+    const loginResponse = await axios.post(`${BASE_URL}/admin/login`, {
+      accessKey: '<ACCESS_KEY>',
+      password: '<PASSWORD>'
+    });
+    const sessionToken = loginResponse.data.token;
+    console.log('Login successful. Session Token:', sessionToken);
+
+    // Create a Team
+    console.log('Creating a new team...');
+    const createTeamResponse = await axios.post(
+      `${BASE_URL}/api/teams`,
+      {
+        name: 'NEW TEAM',
+        announcement_time: '02:30:00'
+      },
+      {
+        headers: { Authorization: `Bearer ${sessionToken}` }
+      }
+    );
+    console.log('Team created:', createTeamResponse.data);
+
+    // Get All Teams
+    console.log('Fetching all teams...');
+    const teamsResponse = await axios.get(`${BASE_URL}/api/teams`);
+    console.log('Teams:', teamsResponse.data);
+
+    // Update a Team
+    console.log('Updating a team...');
+    const updateTeamResponse = await axios.put(
+      `${BASE_URL}/api/teams/1`,
+      {
+        name: 'UPDATED TEAM',
+        announcement_time: '03:00:00'
+      },
+      {
+        headers: { Authorization: `Bearer ${sessionToken}` }
+      }
+    );
+    console.log('Team updated:', updateTeamResponse.data);
+
+    // Delete a Team
+    console.log('Deleting a team...');
+    const deleteTeamResponse = await axios.delete(`${BASE_URL}/api/teams/1`, {
+      headers: { Authorization: `Bearer ${sessionToken}` }
+    });
+    console.log('Team deleted:', deleteTeamResponse.data);
+
+    // Publish a Result
+    console.log('Publishing a result...');
+    const publishResultResponse = await axios.post(
+      `${BASE_URL}/admin/results`,
+      {
+        team: 'NEW TEAM',
+        date: '2025-03-12',
+        result: '45'
+      },
+      {
+        headers: { Authorization: `Bearer ${sessionToken}` }
+      }
+    );
+    console.log('Result published:', publishResultResponse.data);
+  } catch (error) {
+    console.error('Error:', error.response?.data || error.message);
+  }
+})();
