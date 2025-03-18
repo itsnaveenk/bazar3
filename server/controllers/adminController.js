@@ -35,7 +35,7 @@ exports.publishResult = async (data, authorization) => {
   // publish result using team id
   await db.query(`
     INSERT INTO results (team_id, result_date, result, announcement_time)
-    VALUES (?, ?, ?, COALESCE(?, '00:00:00'))
+    VALUES (?, ?, ?, ?)
     ON DUPLICATE KEY UPDATE
       result = VALUES(result),
       announcement_time = VALUES(announcement_time)
