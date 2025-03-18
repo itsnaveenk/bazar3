@@ -2,8 +2,7 @@ const Joi = require('joi');
 
 exports.validateTeam = (req, res, next) => {
   const schema = Joi.object({
-    name: Joi.string().max(100).required(),
-    announcement_time: Joi.string().pattern(/^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/).required()
+    name: Joi.string().max(100).required()
   });
 
   const { error } = schema.validate(req.body);

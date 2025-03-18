@@ -10,7 +10,7 @@ const teamRoutes = require('./routes/team');
 
 const app = express();
 
-app.use(cors({ origin: ['http://localhost:3000', 'https://your-production-domain.com'] }));
+app.use(cors({ origin: ['http://localhost:3000', '*', 'https://your-production-domain.com'] }));
 app.use(express.json({ limit: '10kb' }));
 app.use(security.anonymizeIP);
 app.use(security.sanitizeInput);

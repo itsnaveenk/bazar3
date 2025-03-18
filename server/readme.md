@@ -109,12 +109,10 @@ The server will listen on the port specified in your `.env` file (default is 300
   Retrieve all teams (public).
 
 - **POST /api/teams**  
-  Create a new team (admin only, requires Bearer token).  
-  _Request Body Example:_
+  Create a new team (admin only).  
   ```json
   {
-    "name": "NEW TEAM",
-    "announcement_time": "02:30:00"
+    "name": "NEW TEAM"
   }
   ```
 
@@ -128,8 +126,7 @@ The server will listen on the port specified in your `.env` file (default is 300
 A sample endpoint (POST /api/teams) will sanitize HTML input. For example, sending:
 ```json
 {
-  "name": "<script>alert('xss');</script>",
-  "announcement_time": "02:30:00"
+  "name": "<script>alert('xss');</script>"
 }
 ```
 will have the `<` and `>` characters escaped to protect against XSS.

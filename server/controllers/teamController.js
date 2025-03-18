@@ -12,15 +12,15 @@ exports.getAllTeams = async (req, res) => {
 
 exports.createTeam = async (req, res) => {
   try {
-    const { name, announcement_time } = req.body;
+    const { name } = req.body;
 
-    if (!name || !announcement_time) {
-      return res.status(400).json({ error: 'Name and announcement time are required' });
+    if (!name) {
+      return res.status(400).json({ error: 'Name is required' });
     }
 
     await db.query(
-      'INSERT INTO teams (name, announcement_time) VALUES (?, ?)',
-      [name.toUpperCase(), announcement_time]
+      'INSERT INTO teams (name) VALUES (?)',
+      [name.toUpperCase()]
     );
 
     res.status(201).json({ success: true, message: 'Team created successfully' });
@@ -33,26 +33,14 @@ exports.createTeam = async (req, res) => {
 exports.updateTeam = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, announcement_time } = req.body;
+    const { name } = req.body;
 
-    if (!name && !announcement_time) {
-      return res.status(400).json({ error: 'At least one field (name or announcement time) is required' });
+    if (!name) {
+      return res.status(400).json({ error: 'At least name is required' });
     }
 
-    const fields = [];
-    const values = [];
-
-    if (name) {
-      fields.push('name = ?');
-      values.push(name.toUpperCase());
-    }
-
-    if (announcement_time) {
-      fields.push('announcement_time = ?');
-      values.push(announcement_time);
-    }
-
-    values.push(id);
+    const fields = ['name = ?'];
+    const values = [name.toUpperCase(), id];
 
     await db.query(`UPDATE teams SET ${fields.join(', ')} WHERE id = ?`, values);
 

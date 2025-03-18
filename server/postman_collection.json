@@ -44,7 +44,7 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"team\": \"BIKANER SUPER\",\n  \"date\": \"2025-03-12\",\n  \"result\": \"45\"\n}"
+          "raw": "{\n  \"team\": \"BIKANER SUPER\",\n  \"date\": \"2025-03-12\",\n  \"result\": \"45\",\n  \"announcement_time\": \"02:30:00\"\n}"
         },
         "url": {
           "raw": "http://localhost:3000/admin/results",
@@ -85,7 +85,7 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"name\": \"NEW TEAM\",\n  \"announcement_time\": \"02:30:00\"\n}"
+          "raw": "{\n  \"name\": \"NEW TEAM\"\n}"
         },
         "url": {
           "raw": "http://localhost:3000/api/teams",
@@ -112,7 +112,7 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"name\": \"UPDATED TEAM\",\n  \"announcement_time\": \"03:00:00\"\n}"
+          "raw": "{\n  \"name\": \"UPDATED TEAM\"\n}"
         },
         "url": {
           "raw": "http://localhost:3000/api/teams/1",
@@ -182,7 +182,7 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"name\": \"<script>alert('xss');</script>\",\n  \"announcement_time\": \"02:30:00\"\n}"
+          "raw": "{\n  \"name\": \"<script>alert('xss');</script>\"\n}"
         },
         "url": {
           "raw": "http://localhost:3000/api/teams",

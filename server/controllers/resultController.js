@@ -7,7 +7,7 @@ exports.getMonthlyResults = async (req, res) => {
       return res.status(400).json({ error: 'Team and month are required.' });
     }
     const results = await db.query(`
-      SELECT r.result, r.result_date
+      SELECT r.result, r.result_date, r.announcement_time
       FROM results r
       JOIN teams t ON r.team_id = t.id
       WHERE t.name = ? AND DATE_FORMAT(r.result_date, '%Y-%m') = ?
@@ -28,7 +28,7 @@ exports.getDailyResults = async (req, res) => {
       return res.status(400).json({ error: 'Date query parameter is required.' });
     }
     const results = await db.query(`
-      SELECT t.name as team, r.result, r.result_date
+      SELECT t.name as team, r.result, r.result_date, r.announcement_time
       FROM results r
       JOIN teams t ON r.team_id = t.id
       WHERE r.result_date = ?
