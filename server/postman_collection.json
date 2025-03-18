@@ -56,6 +56,20 @@
       }
     },
     {
+      "name": "Get All Teams",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/api/teams",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["api", "teams"]
+        }
+      }
+    },
+    {
       "name": "Update Result (Admin)",
       "request": {
         "method": "PUT",
@@ -123,20 +137,6 @@
               "value": "BIKANER SUPER"
             }
           ]
-        }
-      }
-    },
-    {
-      "name": "Get All Teams",
-      "request": {
-        "method": "GET",
-        "header": [],
-        "url": {
-          "raw": "http://localhost:3000/api/teams",
-          "protocol": "http",
-          "host": ["localhost"],
-          "port": "3000",
-          "path": ["api", "teams"]
         }
       }
     },
@@ -267,6 +267,33 @@
               "value": "2025-03-12"
             }
           ]
+        }
+      }
+    },
+    {
+      "name": "Publish Result Validation Example",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer <SESSION_TOKEN>"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"team\": \"INVALID@TEAM\",\n  \"date\": \"2025-03-12\",\n  \"result\": \"INVALID_RESULT\",\n  \"announcement_time\": \"INVALID_TIME\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/admin/results",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["admin", "results"]
         }
       }
     }

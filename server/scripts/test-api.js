@@ -15,7 +15,7 @@ const BASE_URL = 'http://localhost:3000';
 
     console.log('Creating a new team...');
     const createTeamResponse = await axios.post(
-      `${BASE_URL}/api/teams`,
+      `${BASE_URL}/admin/teams`,
       {
         name: 'NEW TEAM'
       },
@@ -32,7 +32,7 @@ const BASE_URL = 'http://localhost:3000';
 
     console.log('Updating a team...');
     const updateTeamResponse = await axios.put(
-      `${BASE_URL}/api/teams/1`,
+      `${BASE_URL}/admin/teams/1`,
       {
         name: 'UPDATED TEAM'
       },
@@ -43,7 +43,7 @@ const BASE_URL = 'http://localhost:3000';
     console.log('Team updated:', updateTeamResponse.data);
 
     console.log('Deleting a team...');
-    const deleteTeamResponse = await axios.delete(`${BASE_URL}/api/teams/1`, {
+    const deleteTeamResponse = await axios.delete(`${BASE_URL}/admin/teams/1`, {
       headers: { Authorization: `Bearer ${sessionToken}` }
     });
     console.log('Team deleted:', deleteTeamResponse.data);
@@ -54,7 +54,8 @@ const BASE_URL = 'http://localhost:3000';
       {
         team: 'NEW TEAM',
         date: '2025-03-12',
-        result: '45'
+        result: '45',
+        announcement_time: '02:30:00'
       },
       {
         headers: { Authorization: `Bearer ${sessionToken}` }
