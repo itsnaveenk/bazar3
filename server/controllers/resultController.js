@@ -6,6 +6,9 @@ exports.getMonthlyResults = async (req, res) => {
     if (!team || !month) {
       return res.status(400).json({ error: 'Team and month are required.' });
     }
+    if (!/^\d{4}-\d{2}$/.test(month)) {
+      return res.status(400).json({ error: 'Invalid month format. Use YYYY-MM.' });
+    }
     const results = await db.query(`
       SELECT r.result, r.result_date, r.announcement_time
       FROM results r
