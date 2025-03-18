@@ -11,6 +11,8 @@ exports.getMonthlyResults = async (req, res) => {
       FROM results r
       JOIN teams t ON r.team_id = t.id
       WHERE t.name = ? AND DATE_FORMAT(r.result_date, '%Y-%m') = ?
+        AND (r.result_date < CURDATE()
+          OR (r.result_date = CURDATE() AND r.announcement_time <= CURTIME()))
     `, [team.toUpperCase(), month]);
     if (results.length === 0) {
       return res.status(404).json({ message: 'No results found for this team in the specified month.' });
@@ -32,6 +34,8 @@ exports.getDailyResults = async (req, res) => {
       FROM results r
       JOIN teams t ON r.team_id = t.id
       WHERE r.result_date = ?
+        AND (r.result_date < CURDATE()
+          OR (r.result_date = CURDATE() AND r.announcement_time <= CURTIME()))
     `, [date]);
     if (results.length === 0) {
       return res.status(404).json({ message: 'No results found for the specified date.' });

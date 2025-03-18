@@ -18,6 +18,8 @@ router.get('/results', async (req, res) => {
       FROM results r
       JOIN teams t ON r.team_id = t.id
       WHERE t.name = ? AND r.result_date = ?
+        AND (r.result_date < CURDATE()
+          OR (r.result_date = CURDATE() AND r.announcement_time <= CURTIME()))
     `, [team.toUpperCase(), date]);
 
     if (!result) return res.status(404).json({ error: 'Result not found' });
@@ -43,6 +45,8 @@ router.get('/today', async (req, res) => {
       FROM results r
       JOIN teams t ON r.team_id = t.id
       WHERE r.result_date = ?
+        AND (r.result_date < CURDATE()
+          OR (r.result_date = CURDATE() AND r.announcement_time <= CURTIME()))
     `, [today]);
 
     cache.set(cacheKey, results);

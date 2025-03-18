@@ -1,34 +1,25 @@
 const argon2 = require('argon2');
-const speakeasy = require('speakeasy');
+const crypto = require('crypto');
 
 // Generate Admin Credentials
 const createAdmin = async (password) => {
   const accessKey = crypto.randomBytes(16).toString('hex');
   const hash = await argon2.hash(password);
-  const totpSecret = speakeasy.generateSecret({ length: 20 });
   
-  return {
-    accessKey,
-    hash,
-    totpSecret: totpSecret.base32
-  };
+  return { accessKey, hash };
 };
 
 // Verify Admin Login
-const verifyAdmin = async (accessKey, password, token) => {
-  const { rows: [admin] } = await db.query(
-    'SELECT * FROM admins WHERE access_key = $1',
+const verifyAdmin = async (accessKey, password) => {
+  const admins = await db.query(
+    'SELECT * FROM admins WHERE access_key = ?',
     [accessKey]
   );
+  const admin = admins[0];
   if (!admin || !await argon2.verify(admin.argon2_hash, password)) {
     return false;
   }
-  return speakeasy.totp.verify({
-    secret: admin.totp_secret,
-    encoding: 'base32',
-    token,
-    window: 1
-  });
+  return true;
 };
 
 module.exports = { createAdmin, verifyAdmin };
