@@ -2,13 +2,26 @@ const express = require('express');
 const router = express.Router();
 const teamController = require('../controllers/teamController');
 const { validateTeam } = require('../middlewares/validation');
+const db = require('../db');
+
+async function requireAdmin(req, res, next) {
+  try {
+    const token = req.headers.authorization?.split(' ')[1];
+    if (!token) return res.status(401).json({ error: 'Unauthorized' });
+    const [admin] = await db.query('SELECT id FROM admins WHERE session_token = ?', [token]);
+    if (!admin) return res.status(401).json({ error: 'Unauthorized' });
+    next();
+  } catch {
+    res.status(401).json({ error: 'Unauthorized' });
+  }
+}
 
 router.get('/', teamController.getAllTeams);
 
-router.post('/', validateTeam, teamController.createTeam);
+router.post('/', requireAdmin, validateTeam, teamController.createTeam);
 
-router.put('/:id', validateTeam, teamController.updateTeam);
+router.put('/:id', requireAdmin, validateTeam, teamController.updateTeam);
 
-router.delete('/:id', teamController.deleteTeam);
+router.delete('/:id', requireAdmin, teamController.deleteTeam);
 
 module.exports = router;

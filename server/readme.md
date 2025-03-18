@@ -106,9 +106,10 @@ The server will listen on the port specified in your `.env` file (default is 300
 
 ### Team Endpoints
 - **GET /api/teams**  
-  Retrieve all teams.
+  Retrieve all teams (public).
+
 - **POST /api/teams**  
-  Create a new team. Requires `name` and `announcement_time` in the body.
+  Create a new team (admin only, requires Bearer token).  
   _Request Body Example:_
   ```json
   {
@@ -116,10 +117,12 @@ The server will listen on the port specified in your `.env` file (default is 300
     "announcement_time": "02:30:00"
   }
   ```
+
 - **PUT /api/teams/:id**  
-  Update a team.
+  Update a team (admin only, requires Bearer token).
+
 - **DELETE /api/teams/:id**  
-  Delete a team.
+  Delete a team (admin only, requires Bearer token).
 
 ### Testing Sanitization
 A sample endpoint (POST /api/teams) will sanitize HTML input. For example, sending:

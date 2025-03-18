@@ -77,6 +77,10 @@
           {
             "key": "Content-Type",
             "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer <SESSION_TOKEN>"
           }
         ],
         "body": {
@@ -100,6 +104,10 @@
           {
             "key": "Content-Type",
             "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer <SESSION_TOKEN>"
           }
         ],
         "body": {
@@ -119,7 +127,12 @@
       "name": "Delete Team",
       "request": {
         "method": "DELETE",
-        "header": [],
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer <SESSION_TOKEN>"
+          }
+        ],
         "url": {
           "raw": "http://localhost:3000/api/teams/1",
           "protocol": "http",
