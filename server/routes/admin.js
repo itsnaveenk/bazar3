@@ -22,4 +22,58 @@ router.post('/results', validateResult, async (req, res, next) => {
   }
 });
 
+router.put('/results/:id', validateResult, async (req, res, next) => {
+  try {
+    await adminController.updateResultById(req.params.id, req.body, req.headers.authorization);
+    res.json({ success: true });
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.delete('/results/:id', async (req, res, next) => {
+  try {
+    await adminController.deleteResultById(req.params.id, req.headers.authorization);
+    res.json({ success: true });
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.get('/results', async (req, res, next) => {
+  try {
+    const data = await adminController.getResultsByTeam(req.query.team, req.headers.authorization);
+    res.json(data);
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.post('/teams', async (req, res, next) => {
+  try {
+    const result = await adminController.createTeam(req.body, req.headers.authorization);
+    res.json(result);
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.put('/teams/:id', async (req, res, next) => {
+  try {
+    const result = await adminController.updateTeam(req.params.id, req.body, req.headers.authorization);
+    res.json(result);
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.delete('/teams/:id', async (req, res, next) => {
+  try {
+    const result = await adminController.deleteTeam(req.params.id, req.headers.authorization);
+    res.json(result);
+  } catch (error) {
+    next(error);
+  }
+});
+
 module.exports = router;

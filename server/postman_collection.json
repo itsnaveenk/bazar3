@@ -29,7 +29,7 @@
       }
     },
     {
-      "name": "Publish Result",
+      "name": "Publish Result (Admin)",
       "request": {
         "method": "POST",
         "header": [
@@ -56,6 +56,77 @@
       }
     },
     {
+      "name": "Update Result (Admin)",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer <SESSION_TOKEN>"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"team\": \"UPDATED TEAM\",\n  \"date\": \"2025-03-12\",\n  \"result\": \"55\",\n  \"announcement_time\": \"03:00:00\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/admin/results/1",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["admin", "results", "1"]
+        }
+      }
+    },
+    {
+      "name": "Delete Result (Admin)",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer <SESSION_TOKEN>"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:3000/admin/results/1",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["admin", "results", "1"]
+        }
+      }
+    },
+    {
+      "name": "Get Results By Team (Admin)",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer <SESSION_TOKEN>"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:3000/admin/results?team=BIKANER SUPER",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["admin", "results"],
+          "query": [
+            {
+              "key": "team",
+              "value": "BIKANER SUPER"
+            }
+          ]
+        }
+      }
+    },
+    {
       "name": "Get All Teams",
       "request": {
         "method": "GET",
@@ -70,7 +141,7 @@
       }
     },
     {
-      "name": "Create Team",
+      "name": "Create Team (Admin)",
       "request": {
         "method": "POST",
         "header": [
@@ -88,16 +159,16 @@
           "raw": "{\n  \"name\": \"NEW TEAM\"\n}"
         },
         "url": {
-          "raw": "http://localhost:3000/api/teams",
+          "raw": "http://localhost:3000/admin/teams",
           "protocol": "http",
           "host": ["localhost"],
           "port": "3000",
-          "path": ["api", "teams"]
+          "path": ["admin", "teams"]
         }
       }
     },
     {
-      "name": "Update Team",
+      "name": "Update Team (Admin)",
       "request": {
         "method": "PUT",
         "header": [
@@ -115,16 +186,16 @@
           "raw": "{\n  \"name\": \"UPDATED TEAM\"\n}"
         },
         "url": {
-          "raw": "http://localhost:3000/api/teams/1",
+          "raw": "http://localhost:3000/admin/teams/1",
           "protocol": "http",
           "host": ["localhost"],
           "port": "3000",
-          "path": ["api", "teams", "1"]
+          "path": ["admin", "teams", "1"]
         }
       }
     },
     {
-      "name": "Delete Team",
+      "name": "Delete Team (Admin)",
       "request": {
         "method": "DELETE",
         "header": [
@@ -134,11 +205,11 @@
           }
         ],
         "url": {
-          "raw": "http://localhost:3000/api/teams/1",
+          "raw": "http://localhost:3000/admin/teams/1",
           "protocol": "http",
           "host": ["localhost"],
           "port": "3000",
-          "path": ["api", "teams", "1"]
+          "path": ["admin", "teams", "1"]
         }
       }
     },
@@ -153,48 +224,6 @@
           "host": ["localhost"],
           "port": "3000",
           "path": ["api", "today"]
-        }
-      }
-    },
-    {
-      "name": "Health Check",
-      "request": {
-        "method": "GET",
-        "header": [],
-        "url": {
-          "raw": "http://localhost:3000/api/health",
-          "protocol": "http",
-          "host": ["localhost"],
-          "port": "3000",
-          "path": ["api", "health"]
-        }
-      }
-    },
-    {
-      "name": "Test Sanitization",
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"name\": \"<script>alert('xss');</script>\"\n}"
-        },
-        "url": {
-          "raw": "http://localhost:3000/api/teams",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "3000",
-          "path": [
-            "api",
-            "teams"
-          ]
         }
       }
     },
