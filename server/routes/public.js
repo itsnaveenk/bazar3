@@ -14,7 +14,7 @@ router.get('/results', async (req, res) => {
     }
 
     const [result] = await db.query(`
-      SELECT r.result, r.result_date, t.name AS team
+      SELECT r.result, r.result_date, r.announcement_time, t.name AS team
       FROM results r
       JOIN teams t ON r.team_id = t.id
       WHERE t.name = ? AND r.result_date = ?
@@ -39,7 +39,7 @@ router.get('/today', async (req, res) => {
     }
 
     const results = await db.query(`
-      SELECT t.name AS team, r.result, r.result_date
+      SELECT t.name AS team, r.result, r.result_date, r.announcement_time
       FROM results r
       JOIN teams t ON r.team_id = t.id
       WHERE r.result_date = ?

@@ -17,8 +17,7 @@ const BASE_URL = 'http://localhost:3000';
     const createTeamResponse = await axios.post(
       `${BASE_URL}/api/teams`,
       {
-        name: 'NEW TEAM',
-        announcement_time: '02:30:00'
+        name: 'NEW TEAM'
       },
       {
         headers: { Authorization: `Bearer ${sessionToken}` }
@@ -35,8 +34,7 @@ const BASE_URL = 'http://localhost:3000';
     const updateTeamResponse = await axios.put(
       `${BASE_URL}/api/teams/1`,
       {
-        name: 'UPDATED TEAM',
-        announcement_time: '03:00:00'
+        name: 'UPDATED TEAM'
       },
       {
         headers: { Authorization: `Bearer ${sessionToken}` }

@@ -4,7 +4,6 @@ USE kingdb_prod;
 CREATE TABLE teams (
   id INT AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(100) NOT NULL UNIQUE,
-  announcement_time TIME NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -12,6 +11,7 @@ CREATE TABLE results (
   id INT AUTO_INCREMENT PRIMARY KEY,
   team_id INT NOT NULL,
   result_date DATE NOT NULL,
+  announcement_time TIME NOT NULL,
   result VARCHAR(10) NOT NULL,
   FOREIGN KEY (team_id) REFERENCES teams(id) ON DELETE CASCADE,
   UNIQUE KEY uniq_team_date (team_id, result_date)
