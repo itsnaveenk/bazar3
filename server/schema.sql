@@ -1,5 +1,5 @@
-CREATE DATABASE IF NOT EXISTS satta_prod;
-USE satta_prod;
+CREATE DATABASE IF NOT EXISTS kingdb_prod;
+USE kingdb_prod;
 
 CREATE TABLE teams (
   id INT AUTO_INCREMENT PRIMARY KEY,
