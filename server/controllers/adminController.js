@@ -25,13 +25,17 @@ exports.login = async (accessKey, password) => {
 exports.publishResult = async (data, authorization) => {
   const token = authorization?.split(' ')[1];
   const [admin] = await db.query('SELECT id FROM admins WHERE session_token = ?', [token]);
-
   if (!admin) throw { status: 401, message: 'Unauthorized' };
 
   const { team, date, result } = data;
+  // validate if the team exists
+  const teams = await db.query('SELECT id FROM teams WHERE name = ?', [team.toUpperCase()]);
+  if (!teams.length) throw { status: 400, message: 'Team does not exist. Create team first.' };
+
+  // publish result using team id
   await db.query(`
     INSERT INTO results (team_id, result_date, result)
-    SELECT id, ?, ? FROM teams WHERE name = ?
+    VALUES (?, ?, ?)
     ON DUPLICATE KEY UPDATE result = VALUES(result)
-  `, [date, result, team.toUpperCase()]);
+  `, [teams[0].id, date, result]);
 };

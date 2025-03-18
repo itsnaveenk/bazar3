@@ -2,8 +2,8 @@ const express = require('express');
 const router = express.Router();
 const db = require('../db');
 const cache = require('../cache');
+const resultController = require('../controllers/resultController');
 
-// Get specific result
 router.get('/results', async (req, res) => {
   try {
     const { team, date } = req.query;
@@ -29,7 +29,6 @@ router.get('/results', async (req, res) => {
   }
 });
 
-// Get all today's results
 router.get('/today', async (req, res) => {
   try {
     const today = new Date().toISOString().split('T')[0];
@@ -62,5 +61,11 @@ router.get('/health', async (req, res) => {
     res.status(500).json({ status: 'unhealthy', error: error.message });
   }
 });
+
+// (expects body: { team, month })
+router.post('/results/monthly', resultController.getMonthlyResults);
+
+// (expects query param: date=YYYY-MM-DD)
+router.get('/results/daily', resultController.getDailyResults);
 
 module.exports = router;

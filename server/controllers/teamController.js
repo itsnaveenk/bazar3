@@ -1,6 +1,5 @@
 const db = require('../db');
 
-// Get all teams
 exports.getAllTeams = async (req, res) => {
   try {
     const teams = await db.query('SELECT * FROM teams');
@@ -11,7 +10,6 @@ exports.getAllTeams = async (req, res) => {
   }
 };
 
-// Create a new team
 exports.createTeam = async (req, res) => {
   try {
     const { name, announcement_time } = req.body;
@@ -32,7 +30,6 @@ exports.createTeam = async (req, res) => {
   }
 };
 
-// Update a team
 exports.updateTeam = async (req, res) => {
   try {
     const { id } = req.params;
@@ -66,7 +63,6 @@ exports.updateTeam = async (req, res) => {
   }
 };
 
-// Delete a team
 exports.deleteTeam = async (req, res) => {
   try {
     const { id } = req.params;

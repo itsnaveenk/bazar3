@@ -16,18 +16,13 @@ const createAdmin = async (password) => {
 
 // Verify Admin Login
 const verifyAdmin = async (accessKey, password, token) => {
-  // 1. Fetch admin from DB
   const { rows: [admin] } = await db.query(
     'SELECT * FROM admins WHERE access_key = $1',
     [accessKey]
   );
-
-  // 2. Verify password
   if (!admin || !await argon2.verify(admin.argon2_hash, password)) {
     return false;
   }
-
-  // 3. Verify TOTP
   return speakeasy.totp.verify({
     secret: admin.totp_secret,
     encoding: 'base32',

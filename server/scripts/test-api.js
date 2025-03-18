@@ -13,7 +13,6 @@ const BASE_URL = 'http://localhost:3000';
     const sessionToken = loginResponse.data.token;
     console.log('Login successful. Session Token:', sessionToken);
 
-    // Create a Team
     console.log('Creating a new team...');
     const createTeamResponse = await axios.post(
       `${BASE_URL}/api/teams`,
@@ -32,7 +31,6 @@ const BASE_URL = 'http://localhost:3000';
     const teamsResponse = await axios.get(`${BASE_URL}/api/teams`);
     console.log('Teams:', teamsResponse.data);
 
-    // Update a Team
     console.log('Updating a team...');
     const updateTeamResponse = await axios.put(
       `${BASE_URL}/api/teams/1`,
@@ -46,14 +44,12 @@ const BASE_URL = 'http://localhost:3000';
     );
     console.log('Team updated:', updateTeamResponse.data);
 
-    // Delete a Team
     console.log('Deleting a team...');
     const deleteTeamResponse = await axios.delete(`${BASE_URL}/api/teams/1`, {
       headers: { Authorization: `Bearer ${sessionToken}` }
     });
     console.log('Team deleted:', deleteTeamResponse.data);
 
-    // Publish a Result
     console.log('Publishing a result...');
     const publishResultResponse = await axios.post(
       `${BASE_URL}/admin/results`,
