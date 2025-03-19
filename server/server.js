@@ -10,6 +10,13 @@ const teamRoutes = require('./routes/team');
 
 const app = express();
 
+// Clear cache for all admin routes
+app.use('/admin', (req, res, next) => {
+  console.log('Clearing cache for admin API hit...');
+  cache.store.clear();
+  next();
+});
+
 app.use(cors({ origin: ['http://localhost:3000', '*', 'https://your-production-domain.com'] }));
 app.use(express.json({ limit: '10kb' }));
 app.use(security.anonymizeIP);
