@@ -1,75 +1,64 @@
 const express = require('express');
 const router = express.Router();
-const db = require('../db');
-const cache = require('../cache');
-const resultController = require('../controllers/resultController');
+const resultService = require('../services/resultService');
+const { validateDate, validateMonthlyResults } = require('../middlewares/validation');
 
-router.get('/results', async (req, res) => {
+router.get('/results', async (req, res, next) => {
   try {
     const { team, date } = req.query;
-    const cacheKey = `${team}:${date}`;
-    
-    if (cache.has(cacheKey)) {
-      return res.json(cache.get(cacheKey));
-    }
-
-    const [result] = await db.query(`
-      SELECT r.result, r.result_date, r.announcement_time, t.name AS team
-      FROM results r
-      JOIN teams t ON r.team_id = t.id
-      WHERE t.name = ? AND r.result_date = ?
-        AND (r.result_date < CURDATE()
-          OR (r.result_date = CURDATE() AND r.announcement_time <= CURTIME()))
-    `, [team.toUpperCase(), date]);
-
-    if (!result) return res.status(404).json({ error: 'Result not found' });
-    
-    cache.set(cacheKey, result);
-    res.json(result);
-  } catch (error) {
-    res.status(500).json({ error: 'Server error' });
-  }
-});
-
-router.get('/today', async (req, res) => {
-  try {
-    const today = new Date().toISOString().split('T')[0];
-    const cacheKey = `today:${today}`;
-
-    if (cache.has(cacheKey)) {
-      return res.json(cache.get(cacheKey));
-    }
-
-    const results = await db.query(`
-      SELECT t.name AS team, r.result, r.result_date, r.announcement_time
-      FROM results r
-      JOIN teams t ON r.team_id = t.id
-      WHERE r.result_date = ?
-        AND (r.result_date < CURDATE()
-          OR (r.result_date = CURDATE() AND r.announcement_time <= CURTIME()))
-    `, [today]);
-
-    cache.set(cacheKey, results);
+    const results = await resultService.getResultsByTeamAndDate(team, date);
     res.json(results);
   } catch (error) {
-    res.status(500).json({ error: 'Server error' });
+    next(error);
   }
 });
 
-// health check
-router.get('/health', async (req, res) => {
+router.get('/today', async (req, res, next) => {
   try {
-    await db.query('SELECT 1'); // Simple query to check DB connection
-    res.json({ status: 'healthy' });
+    const results = await resultService.getTodayResults();
+    res.json(results);
   } catch (error) {
-    res.status(500).json({ status: 'unhealthy', error: error.message });
+    next(error);
   }
 });
 
-// (expects body: { team, month })
-router.post('/results/monthly', resultController.getMonthlyResults);
+router.get('/health', async (req, res, next) => {
+  try {
+    const healthStatus = await resultService.checkHealth();
+    res.json(healthStatus);
+  } catch (error) {
+    next(error);
+  }
+});
 
-// (expects query param: date=YYYY-MM-DD)
-router.get('/results/daily', resultController.getDailyResults);
+router.post('/results/monthly', validateMonthlyResults, async (req, res, next) => {
+  try {
+    const { team, month } = req.body;
+    const results = await resultService.getMonthlyResults(team, month);
+    res.json(results);
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.get('/results/daily', validateDate, async (req, res, next) => {
+  try {
+    const { date } = req.query;
+    const results = await resultService.getDailyResults(date);
+    res.json(results);
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.get('/results/team', async (req, res, next) => {
+  try {
+    const { team } = req.query;
+    const results = await resultService.getResultsByTeam(team);
+    res.json(results);
+  } catch (error) {
+    next(error);
+  }
+});
 
 module.exports = router;

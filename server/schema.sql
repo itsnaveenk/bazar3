@@ -5,17 +5,16 @@ CREATE TABLE teams (
   id INT AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(100) NOT NULL UNIQUE,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+) ENGINE=InnoDB;
 
 CREATE TABLE results (
   id INT AUTO_INCREMENT PRIMARY KEY,
   team_id INT NOT NULL,
-  result_date DATE NOT NULL,
-  announcement_time TIME NOT NULL,
-  result VARCHAR(10) NOT NULL,
-  FOREIGN KEY (team_id) REFERENCES teams(id) ON DELETE CASCADE,
-  UNIQUE KEY uniq_team_date (team_id, result_date)
-);
+  result_time DATETIME NOT NULL, -- When the result will be shown
+  result VARCHAR(10) NOT NULL DEFAULT '-1', -- Default result if admin hasn't set it
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (team_id) REFERENCES teams(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
 
 CREATE TABLE admins (
   id INT AUTO_INCREMENT PRIMARY KEY,
@@ -23,5 +22,5 @@ CREATE TABLE admins (
   argon2_hash TEXT NOT NULL,
   session_token CHAR(64),
   is_active BOOLEAN DEFAULT TRUE,
-  last_access TIMESTAMP
-);
+  last_access TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
