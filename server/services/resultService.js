@@ -76,7 +76,7 @@ exports.getMonthlyResults = async (team, month) => {
   }
 
   const results = await db.query(`
-    SELECT r.result, r.result_time,
+    SELECT r.result_time,
       CASE
         WHEN NOW() < r.result_time THEN '-1'
         ELSE r.result
