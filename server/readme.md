@@ -10,14 +10,13 @@ Kings Backend API is a RESTful API for managing teams, publishing match/show res
 ## Installation
 
 1. **Clone the Repository**
-   ```
+   ```bash
    git clone <repository_url>
-   cd kingproject/bazar3
+   cd bazar3/server
    ```
 
 2. **Install Dependencies**
-   ```
-   cd server
+   ```bash
    npm install
    ```
 
@@ -26,14 +25,14 @@ Kings Backend API is a RESTful API for managing teams, publishing match/show res
 1. **Environment Variables**
 
    Create a `.env` file in the `/server` directory with the following variables:
-   ```
+   ```env
    DB_HOST=localhost
    DB_USER=user
    DB_PASS=password
    DB_NAME=kingdb_prod
    IP_PEPPER=your_ip_pepper
    JWT_SECRET=<your_jwt_secret>
-   PORT=3000
+   PORT=5500
    ```
 
 ## Database Setup
@@ -41,7 +40,7 @@ Kings Backend API is a RESTful API for managing teams, publishing match/show res
 1. **Import Schema**
 
    Run the following command in your MySQL client to create the database and tables:
-   ```
+   ```bash
    mysql -u user -p < server/schema.sql
    ```
    This creates the `kingdb_prod` database and the required tables: `teams`, `results`, and `admins`.
@@ -49,7 +48,7 @@ Kings Backend API is a RESTful API for managing teams, publishing match/show res
 ## Admin Account Setup
 
 To create an admin account, run:
-```
+```bash
 npm run create-admin -- <your_password>
 ```
 This script will output an `Access Key` for admin login.
@@ -57,15 +56,15 @@ This script will output an `Access Key` for admin login.
 ## Running the Server
 
 Start the API server by running:
-```
+```bash
 npm start
 ```
-The server will listen on the port specified in your `.env` file (default is 3000).
+The server will listen on the port specified in your `.env` file (default is 5500).
 
 ## API Endpoints
 
 ### Public Endpoints
-- **GET /api/results?team=&lt;TEAM_NAME&gt;&date=&lt;YYYY-MM-DD&gt;**  
+- **GET /api/results?team=<TEAM_NAME>&date=<YYYY-MM-DD>**  
   Retrieve the result for a specified team and date.
 - **GET /api/today**  
   Retrieve all results for the current day.
@@ -80,7 +79,7 @@ The server will listen on the port specified in your `.env` file (default is 300
     "month": "2025-03"
   }
   ```
-- **GET /api/results/daily?date=&lt;YYYY-MM-DD&gt;**  
+- **GET /api/results/daily?date=<YYYY-MM-DD>**  
   Get daily results for all teams.
 
 ### Admin Endpoints
@@ -99,8 +98,8 @@ The server will listen on the port specified in your `.env` file (default is 300
   ```json
   {
     "team": "NEW TEAM",
-    "date": "2025-03-12",
-    "result": "45"
+    "result": "45",
+    "result_time": "2025-03-12 15:00:00"
   }
   ```
 
@@ -108,30 +107,28 @@ The server will listen on the port specified in your `.env` file (default is 300
 - **GET /api/teams**  
   Retrieve all teams (public).
 
-- **POST /api/teams**  
+- **POST /admin/teams**  
   Create a new team (admin only).  
+  _Request Body Example:_
   ```json
   {
     "name": "NEW TEAM"
   }
   ```
 
-- **PUT /api/teams/:id**  
-  Update a team (admin only, requires Bearer token).
+- **PUT /admin/teams/:id**  
+  Update a team (admin only, requires Bearer token).  
+  _Request Body Example:_
+  ```json
+  {
+    "name": "UPDATED TEAM"
+  }
+  ```
 
-- **DELETE /api/teams/:id**  
+- **DELETE /admin/teams/:id**  
   Delete a team (admin only, requires Bearer token).
 
-### Testing Sanitization
-A sample endpoint (POST /api/teams) will sanitize HTML input. For example, sending:
-```json
-{
-  "name": "<script>alert('xss');</script>"
-}
-```
-will have the `<` and `>` characters escaped to protect against XSS.
-
-## Testing the API
+### Testing the API
 
 1. **Using Postman**
 
@@ -140,7 +137,7 @@ will have the `<` and `>` characters escaped to protect against XSS.
 2. **Using the Test Script**
 
    A test script is available that performs a sequence of API calls:
-   ```
+   ```bash
    npm run test-api
    ```
    This script uses `axios` to:

@@ -20,10 +20,10 @@
           "raw": "{\n  \"accessKey\": \"<ACCESS_KEY>\",\n  \"password\": \"<PASSWORD>\"\n}"
         },
         "url": {
-          "raw": "http://localhost:3000/admin/login",
+          "raw": "http://localhost:5500/admin/login",
           "protocol": "http",
           "host": ["localhost"],
-          "port": "3000",
+          "port": "5500",
           "path": ["admin", "login"]
         }
       }
@@ -44,13 +44,13 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"team\": \"BIKANER SUPER\",\n  \"date\": \"2025-03-12\",\n  \"result\": \"45\",\n  \"announcement_time\": \"02:30:00\"\n}"
+          "raw": "{\n  \"team\": \"BIKANER SUPER\",\n  \"result\": \"45\",\n  \"result_time\": \"2025-03-12 15:00:00\"\n}"
         },
         "url": {
-          "raw": "http://localhost:3000/admin/results",
+          "raw": "http://localhost:5500/admin/results",
           "protocol": "http",
           "host": ["localhost"],
-          "port": "3000",
+          "port": "5500",
           "path": ["admin", "results"]
         }
       }
@@ -61,10 +61,10 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "http://localhost:3000/api/teams",
+          "raw": "http://localhost:5500/api/teams",
           "protocol": "http",
           "host": ["localhost"],
-          "port": "3000",
+          "port": "5500",
           "path": ["api", "teams"]
         }
       }
@@ -85,13 +85,13 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"team\": \"UPDATED TEAM\",\n  \"date\": \"2025-03-12\",\n  \"result\": \"55\",\n  \"announcement_time\": \"03:00:00\"\n}"
+          "raw": "{\n  \"team\": \"UPDATED TEAM\",\n  \"result\": \"55\",\n  \"result_time\": \"2025-03-12 16:00:00\"\n}"
         },
         "url": {
-          "raw": "http://localhost:3000/admin/results/1",
+          "raw": "http://localhost:5500/admin/results/1",
           "protocol": "http",
           "host": ["localhost"],
-          "port": "3000",
+          "port": "5500",
           "path": ["admin", "results", "1"]
         }
       }
@@ -107,10 +107,10 @@
           }
         ],
         "url": {
-          "raw": "http://localhost:3000/admin/results/1",
+          "raw": "http://localhost:5500/admin/results/1",
           "protocol": "http",
           "host": ["localhost"],
-          "port": "3000",
+          "port": "5500",
           "path": ["admin", "results", "1"]
         }
       }
@@ -126,10 +126,10 @@
           }
         ],
         "url": {
-          "raw": "http://localhost:3000/admin/results?team=BIKANER SUPER",
+          "raw": "http://localhost:5500/admin/results?team=BIKANER SUPER",
           "protocol": "http",
           "host": ["localhost"],
-          "port": "3000",
+          "port": "5500",
           "path": ["admin", "results"],
           "query": [
             {
@@ -159,10 +159,10 @@
           "raw": "{\n  \"name\": \"NEW TEAM\"\n}"
         },
         "url": {
-          "raw": "http://localhost:3000/admin/teams",
+          "raw": "http://localhost:5500/admin/teams",
           "protocol": "http",
           "host": ["localhost"],
-          "port": "3000",
+          "port": "5500",
           "path": ["admin", "teams"]
         }
       }
@@ -186,10 +186,10 @@
           "raw": "{\n  \"name\": \"UPDATED TEAM\"\n}"
         },
         "url": {
-          "raw": "http://localhost:3000/admin/teams/1",
+          "raw": "http://localhost:5500/admin/teams/1",
           "protocol": "http",
           "host": ["localhost"],
-          "port": "3000",
+          "port": "5500",
           "path": ["admin", "teams", "1"]
         }
       }
@@ -205,10 +205,10 @@
           }
         ],
         "url": {
-          "raw": "http://localhost:3000/admin/teams/1",
+          "raw": "http://localhost:5500/admin/teams/1",
           "protocol": "http",
           "host": ["localhost"],
-          "port": "3000",
+          "port": "5500",
           "path": ["admin", "teams", "1"]
         }
       }
@@ -219,10 +219,10 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "http://localhost:3000/api/today",
+          "raw": "http://localhost:5500/api/today",
           "protocol": "http",
           "host": ["localhost"],
-          "port": "3000",
+          "port": "5500",
           "path": ["api", "today"]
         }
       }
@@ -242,10 +242,10 @@
           "raw": "{\n  \"team\": \"BIKANER SUPER\",\n  \"month\": \"2025-03\"\n}"
         },
         "url": {
-          "raw": "http://localhost:3000/api/results/monthly",
+          "raw": "http://localhost:5500/api/results/monthly",
           "protocol": "http",
           "host": ["localhost"],
-          "port": "3000",
+          "port": "5500",
           "path": ["api", "results", "monthly"]
         }
       }
@@ -256,10 +256,10 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "http://localhost:3000/api/results/daily?date=2025-03-12",
+          "raw": "http://localhost:5500/api/results/daily?date=2025-03-12",
           "protocol": "http",
           "host": ["localhost"],
-          "port": "3000",
+          "port": "5500",
           "path": ["api", "results", "daily"],
           "query": [
             {
@@ -271,29 +271,22 @@
       }
     },
     {
-      "name": "Publish Result Validation Example",
+      "name": "Get Results By Team (Public)",
       "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          },
-          {
-            "key": "Authorization",
-            "value": "Bearer <SESSION_TOKEN>"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"team\": \"INVALID@TEAM\",\n  \"date\": \"2025-03-12\",\n  \"result\": \"INVALID_RESULT\",\n  \"announcement_time\": \"INVALID_TIME\"\n}"
-        },
+        "method": "GET",
+        "header": [],
         "url": {
-          "raw": "http://localhost:3000/admin/results",
+          "raw": "http://localhost:5500/api/results/team?team=BIKANER SUPER",
           "protocol": "http",
           "host": ["localhost"],
-          "port": "3000",
-          "path": ["admin", "results"]
+          "port": "5500",
+          "path": ["api", "results", "team"],
+          "query": [
+            {
+              "key": "team",
+              "value": "BIKANER SUPER"
+            }
+          ]
         }
       }
     }

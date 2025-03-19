@@ -2,6 +2,7 @@ class SattaCache {
   constructor() {
     this.store = new Map();
     this.ttl = 300000;
+    this.startCleanup();
   }
 
   set(key, value) {
@@ -25,6 +26,17 @@ class SattaCache {
 
   clear() {
     this.store.clear();
+  }
+
+  startCleanup() {
+    setInterval(() => {
+      const now = Date.now();
+      for (const [key, value] of this.store.entries()) {
+        if (value.expires < now) {
+          this.store.delete(key);
+        }
+      }
+    }, 60000); // Run every 60 seconds
   }
 }
 

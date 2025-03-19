@@ -54,8 +54,7 @@ const BASE_URL = 'http://localhost:3000';
       {
         team: 'NEW TEAM',
         date: '2025-03-12',
-        result: '45',
-        announcement_time: '02:30:00'
+        result: '45'
       },
       {
         headers: { Authorization: `Bearer ${sessionToken}` }
