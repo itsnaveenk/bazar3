@@ -1,6 +1,7 @@
 const axios = require('axios');
+const { formatMySQLDateTime } = require('../utils/dateHelpers');
 
-const BASE_URL = 'http://localhost:3000';
+const BASE_URL = 'http://localhost:5500';
 
 (async () => {
   try {
@@ -48,13 +49,18 @@ const BASE_URL = 'http://localhost:3000';
     });
     console.log('Team deleted:', deleteTeamResponse.data);
 
+    // Get tomorrow's date in IST for result_time
+    const tomorrowInIST = new Date();
+    tomorrowInIST.setDate(tomorrowInIST.getDate() + 1);
+    const formattedDateTime = formatMySQLDateTime(tomorrowInIST);
+
     console.log('Publishing a result...');
     const publishResultResponse = await axios.post(
       `${BASE_URL}/admin/results`,
       {
         team: 'NEW TEAM',
-        date: '2025-03-12',
-        result: '45'
+        result: '45',
+        result_time: formattedDateTime
       },
       {
         headers: { Authorization: `Bearer ${sessionToken}` }

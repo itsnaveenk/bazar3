@@ -1,5 +1,6 @@
 const db = require('../db');
 const cache = require('../cache');
+const { formatDate, getCurrentIndianDate } = require('../utils/dateHelpers');
 
 exports.getResultsByTeamAndDate = async (team, date) => {
   console.log(`Fetching results for team: ${team}, date: ${date}`);
@@ -11,7 +12,7 @@ exports.getResultsByTeamAndDate = async (team, date) => {
     }
 
     const results = await db.query(`
-      SELECT r.result_time,
+      SELECT r.id, r.result_time,
         CASE
           WHEN NOW() < r.result_time THEN '-1'
           ELSE r.result
@@ -20,6 +21,7 @@ exports.getResultsByTeamAndDate = async (team, date) => {
       FROM results r
       JOIN teams t ON r.team_id = t.id
       WHERE t.name = ? AND DATE(r.result_time) = ?
+      ORDER BY r.result_time DESC
     `, [team.toUpperCase(), date]);
 
     if (!results.length) {
@@ -36,7 +38,7 @@ exports.getResultsByTeamAndDate = async (team, date) => {
 };
 
 exports.getTodayResults = async () => {
-  const today = new Date().toISOString().split('T')[0];
+  const today = getCurrentIndianDate();
   const cacheKey = `today:${today}`;
 
   console.log(`Cache key: ${cacheKey}`);
@@ -47,15 +49,16 @@ exports.getTodayResults = async () => {
 
   console.log('Cache miss. Fetching results from the database...');
   const results = await db.query(`
-    SELECT t.name AS team, r.result_time,
+    SELECT r.id, t.name AS team, r.result_time,
       CASE
         WHEN NOW() < r.result_time THEN '-1'
         ELSE r.result
       END AS visible_result
     FROM results r
     JOIN teams t ON r.team_id = t.id
-    WHERE DATE(r.result_time) = ?
-  `, [today]);
+    WHERE DATE(r.result_time) = CURDATE()
+    ORDER BY r.result_time DESC
+  `);
 
   console.log('Caching today\'s results...');
   cache.set(cacheKey, results);
@@ -88,6 +91,7 @@ exports.getMonthlyResults = async (team, month) => {
     FROM results r
     JOIN teams t ON r.team_id = t.id
     WHERE t.name = ? AND DATE_FORMAT(r.result_time, '%Y-%m') = ?
+    ORDER BY r.result_time DESC
   `, [team.toUpperCase(), month]);
 
   return results;
@@ -99,7 +103,7 @@ exports.getDailyResults = async (date) => {
   }
 
   const results = await db.query(`
-    SELECT t.name AS team, r.result_time,
+    SELECT r.id, t.name AS team, r.result_time,
       CASE
         WHEN NOW() < r.result_time THEN '-1'
         ELSE r.result
@@ -107,6 +111,7 @@ exports.getDailyResults = async (date) => {
     FROM results r
     JOIN teams t ON r.team_id = t.id
     WHERE DATE(r.result_time) = ?
+    ORDER BY r.result_time DESC
   `, [date]);
 
   return results;
@@ -132,6 +137,7 @@ exports.getResultsByTeam = async (team) => {
     FROM results r
     JOIN teams t ON r.team_id = t.id
     WHERE t.name = ?
+    ORDER BY r.result_time DESC
   `, [team.toUpperCase()]);
 
   cache.set(cacheKey, results);

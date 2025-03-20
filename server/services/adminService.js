@@ -37,6 +37,12 @@ exports.login = async (accessKey, password) => {
 
 exports.publishResult = async (data) => {
   const { team, result, result_time } = data;
+  
+  // Validate date format
+  if (!result_time || !/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/.test(result_time)) {
+    throw { status: 400, message: 'Result time must be in YYYY-MM-DD HH:MM:SS format.' };
+  }
+  
   const teams = await db.query('SELECT id FROM teams WHERE name = ?', [team.toUpperCase()]);
   if (!teams.length) throw { status: 400, message: 'Team does not exist. Create team first.' };
 
@@ -57,6 +63,7 @@ exports.getResultsByTeam = async (teamName) => {
     FROM results r
     JOIN teams t ON r.team_id = t.id
     WHERE t.name = ?
+    ORDER BY r.result_time DESC
   `, [teamName.toUpperCase()]);
 };
 
@@ -81,6 +88,12 @@ exports.deleteTeam = async (id) => {
 
 exports.updateResultById = async (id, data) => {
   const { team, result, result_time } = data;
+  
+  // Validate date format
+  if (!result_time || !/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/.test(result_time)) {
+    throw { status: 400, message: 'Result time must be in YYYY-MM-DD HH:MM:SS format.' };
+  }
+  
   const teams = await db.query('SELECT id FROM teams WHERE name = ?', [team.toUpperCase()]);
   if (!teams.length) throw { status: 400, message: 'Team does not exist' };
 
