@@ -39,10 +39,13 @@ exports.getTodayResults = async () => {
   const today = new Date().toISOString().split('T')[0];
   const cacheKey = `today:${today}`;
 
+  console.log(`Cache key: ${cacheKey}`);
   if (cache.has(cacheKey)) {
+    console.log('Cache hit for today\'s results.');
     return cache.get(cacheKey);
   }
 
+  console.log('Cache miss. Fetching results from the database...');
   const results = await db.query(`
     SELECT t.name AS team, r.result_time,
       CASE
@@ -54,6 +57,7 @@ exports.getTodayResults = async () => {
     WHERE DATE(r.result_time) = ?
   `, [today]);
 
+  console.log('Caching today\'s results...');
   cache.set(cacheKey, results);
   return results;
 };
@@ -76,7 +80,7 @@ exports.getMonthlyResults = async (team, month) => {
   }
 
   const results = await db.query(`
-    SELECT r.result, r.result_time,
+    SELECT r.result_time,
       CASE
         WHEN NOW() < r.result_time THEN '-1'
         ELSE r.result
