@@ -17,7 +17,19 @@ app.use('/admin', (req, res, next) => {
   next();
 });
 
-app.use(cors({ origin: ['http://localhost:3000', '*', 'https://your-production-domain.com'] }));
+// Parse CORS origins from environment variable
+const corsOrigins = process.env.CORS_ORIGINS ? 
+  process.env.CORS_ORIGINS.split(',') : 
+  ['http://localhost:3000']; // Fallback if env var is not set
+
+// Replace the existing CORS middleware
+app.use(cors({
+  origin: corsOrigins,
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
 app.use(express.json({ limit: '10kb' }));
 app.use(security.anonymizeIP);
 app.use(security.sanitizeInput);
