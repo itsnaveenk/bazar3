@@ -6,7 +6,7 @@ exports.getAllTeams = async (req, res) => {
     const teams = await db.query('SELECT * FROM teams');
     if (!teams.length) {
       console.log('No teams found.');
-      return res.status(404).json({ error: 'No teams found.' });
+      return res.status(200).json({ error: 'No teams found.' });
     }
     console.log(`Fetched ${teams.length} teams.`);
     res.json(teams);
