@@ -2,7 +2,7 @@ const mysql = require('mysql2/promise');
 
 // Validate environment variables
 if (!process.env.DB_HOST || !process.env.DB_USER || !process.env.DB_PASS || !process.env.DB_NAME) {
-  console.error('Database configuration is missing in .env file.');
+  console.error(`[${new Date().toISOString()}] Database configuration is missing in .env file.`);
   process.exit(1);
 }
 
