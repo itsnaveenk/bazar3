@@ -1,8 +1,10 @@
 const mysql = require('mysql2/promise');
 
 // Validate environment variables
-if (!process.env.DB_HOST || !process.env.DB_USER || !process.env.DB_PASS || !process.env.DB_NAME) {
-  console.error(`[${new Date().toISOString()}] Database configuration is missing in .env file.`);
+const requiredEnvs = ['DB_HOST', 'DB_USER', 'DB_PASS', 'DB_NAME'];
+const missingEnvs = requiredEnvs.filter(env => !process.env[env]);
+if (missingEnvs.length > 0) {
+  console.error(`[${new Date().toISOString()}] Missing environment variables: ${missingEnvs.join(', ')}`);
   process.exit(1);
 }
 
