@@ -16,7 +16,8 @@ const pool = mysql.createPool({
   waitForConnections: true,
   connectionLimit: 20,
   queueLimit: 0,
-  timezone: '+05:30' // Updated to Indian Standard Time (IST)
+  timezone: '+05:30', // Updated to Indian Standard Time (IST)
+  ssl: { rejectUnauthorized: false } 
 });
 
 module.exports = {
