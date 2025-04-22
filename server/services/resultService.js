@@ -14,7 +14,7 @@ exports.getResultsByTeamAndDate = async (team, date) => {
     const results = await db.query(`
       SELECT r.id, r.result_time,
         CASE
-          WHEN NOW() < r.result_time THEN '-1'
+          WHEN CONVERT_TZ(NOW(), 'UTC', '+05:30') < r.result_time THEN '-1'
           ELSE r.result
         END AS visible_result,
         t.name AS team
@@ -29,7 +29,7 @@ exports.getResultsByTeamAndDate = async (team, date) => {
       return [];
     }
 
-    cache.set(cacheKey, results);
+    cache.set(cacheKey, results, 60000);
     return results;
   } catch (error) {
     console.error('Error fetching results:', error);
@@ -51,7 +51,7 @@ exports.getTodayResults = async () => {
   const results = await db.query(`
     SELECT r.id, t.name AS team, r.result_time,
       CASE
-        WHEN NOW() < r.result_time THEN '-1'
+        WHEN CONVERT_TZ(NOW(), 'UTC', '+05:30') < r.result_time THEN '-1'
         ELSE r.result
       END AS visible_result
     FROM results r
@@ -61,7 +61,7 @@ exports.getTodayResults = async () => {
   `);
 
   console.log('Caching today\'s results...');
-  cache.set(cacheKey, results);
+  cache.set(cacheKey, results, 60000);
   return results;
 };
 
@@ -82,10 +82,16 @@ exports.getMonthlyResults = async (team, month) => {
     throw { status: 400, message: 'Invalid month format. Use YYYY-MM.' };
   }
 
+  const cacheKey = `monthly:${team}:${month}`;
+  if (cache.has(cacheKey)) {
+    console.log('Cache hit for monthly results.');
+    return cache.get(cacheKey);
+  }
+
   const results = await db.query(`
     SELECT r.result_time,
       CASE
-        WHEN NOW() < r.result_time THEN '-1'
+        WHEN CONVERT_TZ(NOW(), 'UTC', '+05:30') < r.result_time THEN '-1'
         ELSE r.result
       END AS visible_result
     FROM results r
@@ -94,6 +100,7 @@ exports.getMonthlyResults = async (team, month) => {
     ORDER BY r.result_time DESC
   `, [team.toUpperCase(), month]);
 
+  cache.set(cacheKey, results, 300000); // Cache for 5 minutes
   return results;
 };
 
@@ -102,18 +109,26 @@ exports.getDailyResults = async (date) => {
     throw { status: 400, message: 'Date is required.' };
   }
 
+  const cacheKey = `daily:${date}`;
+  if (cache.has(cacheKey)) {
+    console.log('Cache hit for daily results.');
+    return cache.get(cacheKey);
+  }
+
+  // Use CONVERT_TZ to explicitly convert timestamps to IST
   const results = await db.query(`
     SELECT r.id, t.name AS team, r.result_time,
       CASE
-        WHEN NOW() < r.result_time THEN '-1'
+        WHEN CONVERT_TZ(NOW(), 'UTC', '+05:30') < r.result_time THEN '-1'
         ELSE r.result
       END AS visible_result
     FROM results r
     JOIN teams t ON r.team_id = t.id
-    WHERE DATE(r.result_time) = ?
+    WHERE DATE(CONVERT_TZ(r.result_time, 'UTC', '+05:30')) = ?
     ORDER BY r.result_time DESC
   `, [date]);
 
+  cache.set(cacheKey, results, 60000);
   return results;
 };
 
@@ -130,7 +145,7 @@ exports.getResultsByTeam = async (team) => {
   const results = await db.query(`
     SELECT r.result_time,
       CASE
-        WHEN NOW() < r.result_time THEN '-1'
+        WHEN CONVERT_TZ(NOW(), 'UTC', '+05:30') < r.result_time THEN '-1'
         ELSE r.result
       END AS visible_result,
       t.name AS team
@@ -140,6 +155,12 @@ exports.getResultsByTeam = async (team) => {
     ORDER BY r.result_time DESC
   `, [team.toUpperCase()]);
 
-  cache.set(cacheKey, results);
+  cache.set(cacheKey, results, 60000);
   return results;
+};
+
+exports.clearCache = async () => {
+  console.log('Manually clearing all cache...');
+  cache.clear();
+  return { success: true, message: 'Cache cleared successfully', timestamp: new Date().toISOString() };
 };

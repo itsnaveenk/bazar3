@@ -61,4 +61,13 @@ router.get('/results/team', async (req, res, next) => {
   }
 });
 
+router.get('/cache/clear', async (req, res, next) => {
+  try {
+    const result = await resultService.clearCache();
+    res.json(result);
+  } catch (error) {
+    next(error);
+  }
+});
+
 module.exports = router;
