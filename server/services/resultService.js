@@ -124,7 +124,7 @@ exports.getDailyResults = async (date) => {
       END AS visible_result
     FROM results r
     JOIN teams t ON r.team_id = t.id
-    WHERE DATE(CONVERT_TZ(r.result_time, 'UTC', '+05:30')) = ?
+    WHERE DATE(r.result_time) = ?
     ORDER BY r.result_time DESC
   `, [date]);
 
